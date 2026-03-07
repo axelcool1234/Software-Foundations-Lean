@@ -1017,7 +1017,7 @@ theorem no_penalty_for_mostly_on_time :
       apply_late_policy late_days g = g := by
   sorry
 
-/- **** Exercise: 2 stars, standard (grade_lowered_once) -/
+/- **** Exercise: 2 stars, standard (graded_lowered_once) -/
 
 theorem grade_lowered_once :
     ∀ (late_days : nat) (g : grade),
