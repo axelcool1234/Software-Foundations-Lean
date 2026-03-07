@@ -36,11 +36,11 @@ Treat `TRANSLATION_STATUS.md` as the chapter-level summary of translation
 readiness.
 
 - Before translating, read the existing chapter row if one exists.
-- Prefer `python scripts/update_translation_status.py get <Chapter>` over
+- Prefer `python3 scripts/update_translation_status.py get <Chapter>` over
   manual table scanning when working from the terminal.
 - After translating, update the chapter row with the most accurate current
   state.
-- Prefer `python scripts/update_translation_status.py set ...` over manual table
+- Prefer `python3 scripts/update_translation_status.py set ...` over manual table
   editing.
 - Keep the `Notes` field short and current rather than appending a long history.
 
@@ -65,6 +65,25 @@ Suggested status choices after translation work:
 - Use Lean-specific notes when the Lean version intentionally diverges from the
   Rocq presentation.
 
+## Script roles
+
+- `scripts/work_on_chapter.sh`: default high-level entry point for chapter work
+  from the terminal. Use it to inspect current status, run the default review
+  workflow, or scaffold a missing chapter.
+- `scripts/scaffold_lean_chapter.py`: use when the Lean chapter does not exist
+  yet and you want a heading-preserving skeleton before translating prose and
+  code.
+- `scripts/check_lean_chapter.sh`: use after edits to typecheck the Lean file.
+- `scripts/review_chapter_translation.sh`: use when an existing Lean chapter
+  should be compared against the Rocq source before or after edits.
+- `scripts/update_translation_status.py get`: read the current chapter row
+  before substantial work.
+- `scripts/update_translation_status.py set`: update the chapter row after the
+  Lean file has been checked and the current readiness is known.
+- `scripts/check_translation_status.py`: repository validation helper for ledger
+  consistency. Useful for maintenance and CI, but not a replacement for chapter
+  translation or review.
+
 ## Useful repo resources
 
 - `AGENTS.md`
@@ -77,7 +96,15 @@ Suggested status choices after translation work:
 ## Common commands
 
 ```bash
-python scripts/update_translation_status.py get Basics
+scripts/work_on_chapter.sh Basics
+```
+
+```bash
+python3 scripts/update_translation_status.py get Basics
+```
+
+```bash
+python3 scripts/scaffold_lean_chapter.py rocq/lf/Basics.v
 ```
 
 ```bash
@@ -89,7 +116,7 @@ scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean
 ```
 
 ```bash
-python scripts/update_translation_status.py set Basics \
+python3 scripts/update_translation_status.py set Basics \
   --rocq rocq/lf/Basics.v \
   --lean lean/lf/Basics.lean \
   --status "needs reading-quality pass" \

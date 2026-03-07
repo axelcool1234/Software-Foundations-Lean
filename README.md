@@ -16,7 +16,7 @@ This README is for humans. The agent-facing rules live in [AGENTS.md](AGENTS.md)
 
 - `rocq/lf/`: original Software Foundations chapters in Rocq/Coq.
 - `lean/lf/`: Lean translations.
-- `scripts/`: helper scripts for translation review and Lean checking.
+- `scripts/`: helper scripts for translation review, chapter scaffolding, status management, and Lean checking.
 - `skills/public/`: repo-local Codex skills for translation and chapter review.
 - `docs/translation-style.md`: guidance on proof style and pedagogical goals.
 - `TRANSLATION_STATUS.md`: chapter-by-chapter status tracker.
@@ -42,7 +42,7 @@ If you are using Nix:
 nix develop
 ```
 
-This gives you `elan` and Rocq tools. The repository also has a
+This gives you `elan`, `python3`, and Rocq tools. The repository also has a
 [`lean-toolchain`](lean-toolchain), so plain `lean` commands will use the pinned
 stable Lean version through `elan`.
 
@@ -64,6 +64,36 @@ Run the basic chapter review workflow:
 
 ```bash
 scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean
+```
+
+Validate the translation status table and typecheck all Lean chapters:
+
+```bash
+scripts/check_translation_workflow.sh
+```
+
+Read or update a chapter status row:
+
+```bash
+python3 scripts/update_translation_status.py get Basics
+python3 scripts/update_translation_status.py set Basics \
+  --rocq rocq/lf/Basics.v \
+  --lean lean/lf/Basics.lean \
+  --status "ready to study" \
+  --notes "Comparison review and reading-quality pass completed; structure, prose, and pedagogy are in good shape."
+```
+
+Create a Lean scaffold from Rocq headings:
+
+```bash
+python3 scripts/scaffold_lean_chapter.py rocq/lf/Induction.v
+```
+
+Run the chapter workflow helper:
+
+```bash
+scripts/work_on_chapter.sh Basics
+scripts/work_on_chapter.sh Induction --scaffold
 ```
 
 Compile a Rocq chapter and its test:
@@ -162,19 +192,22 @@ Suggested meanings:
 
 ## Suggested workflow per chapter
 
-1. Check whether a Lean file already exists.
-2. If it exists, run a comparison review before working from it.
+1. Start with `scripts/work_on_chapter.sh <Chapter>` to inspect the current status.
+2. If no Lean file exists, create a scaffold with `--scaffold` or `scripts/scaffold_lean_chapter.py`.
 3. Translate or improve the chapter.
 4. Run `scripts/check_lean_chapter.sh`.
 5. Run `scripts/review_chapter_translation.sh`.
 6. Do a final reading-quality pass.
-7. Update `TRANSLATION_STATUS.md`.
+7. Update the status row with `scripts/update_translation_status.py`.
+8. Periodically run `scripts/check_translation_workflow.sh` to catch ledger drift and Lean regressions.
 
 ## Notes
 
 - The chapter heading comparison script is a structural aid, not a semantic
   review. It helps catch missing or reordered subsections, but it does not tell
   you whether the prose is good.
+- `scripts/check_translation_status.py` only validates the ledger and file
+  layout. It does not decide whether a chapter is genuinely ready to study.
 - `#check` and `#eval` output in Lean chapters is intentionally kept, since it
   is useful while reading and learning.
 - If a chapter differs materially from the Rocq version because Lean has a

@@ -1,0 +1,19 @@
+name: Translation Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  translation-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Run translation workflow checks
+        run: nix develop -c sh scripts/check_translation_workflow.sh

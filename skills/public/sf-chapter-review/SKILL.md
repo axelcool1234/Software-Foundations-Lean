@@ -34,11 +34,11 @@ Treat `TRANSLATION_STATUS.md` as the canonical chapter-level summary, not as a
 full audit log.
 
 - Before reviewing, read the existing chapter row if one exists.
-- Prefer `python scripts/update_translation_status.py get <Chapter>` over manual table scanning when working from the terminal.
+- Prefer `python3 scripts/update_translation_status.py get <Chapter>` over manual table scanning when working from the terminal.
 - Use the existing status and notes to understand whether the chapter is still a
   draft, due for comparison, or awaiting a reading-quality pass.
 - After the review, update the row for that chapter.
-- Prefer `python scripts/update_translation_status.py set ...` over manual table editing.
+- Prefer `python3 scripts/update_translation_status.py set ...` over manual table editing.
 - If the chapter is missing from the table, add a new row.
 - Keep the `Notes` field short and current. Replace stale notes instead of
   appending a long running history.
@@ -73,6 +73,24 @@ conservative status that still reflects the blocker.
   - `needs structural cleanup first`
   - `needs proof-style cleanup`
 
+## Script roles
+
+- `scripts/review_chapter_translation.sh`: default review entry point when the
+  Lean chapter already exists. Use this first unless you specifically need only
+  the heading diff.
+- `scripts/compare_chapter_headings.sh`: structure-only helper. Use it when you
+  want a quick subsection alignment view before or alongside the deeper review.
+- `scripts/update_translation_status.py get`: read the current chapter row
+  before reviewing.
+- `scripts/update_translation_status.py set`: update the chapter row after the
+  review is complete and any requested fixes have been verified.
+- `scripts/work_on_chapter.sh`: optional convenience wrapper for humans. Useful
+  for manual chapter workflow, but this skill should still reason explicitly
+  about the review findings rather than relying on the wrapper's output alone.
+- `scripts/check_translation_status.py`: repository validation helper, mainly
+  for consistency checks and CI. Do not use it as a substitute for chapter
+  review.
+
 ## Useful repo resources
 
 - `AGENTS.md`
@@ -85,7 +103,7 @@ conservative status that still reflects the blocker.
 ## Common commands
 
 ```bash
-python scripts/update_translation_status.py get Basics
+python3 scripts/update_translation_status.py get Basics
 ```
 
 ```bash
@@ -97,7 +115,7 @@ scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean
 ```
 
 ```bash
-python scripts/update_translation_status.py set Basics \
+python3 scripts/update_translation_status.py set Basics \
   --rocq rocq/lf/Basics.v \
   --lean lean/lf/Basics.lean \
   --status "ready to study" \

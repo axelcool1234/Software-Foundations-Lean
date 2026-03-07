@@ -18,6 +18,12 @@ Top-level tooling lives in `flake.nix`, `flake.lock`, and `lean-toolchain`. Shar
 - `scripts/check_lean_chapter.sh lean/lf/Basics.lean`: wrapper around the repo's Lean chapter typecheck.
 - `scripts/compare_chapter_headings.sh rocq/lf/Basics.v lean/lf/Basics.lean`: print the heading structure of a Rocq chapter and its Lean translation side by side for review.
 - `scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean`: run the basic structural comparison and Lean typecheck together.
+- `python3 scripts/update_translation_status.py get Basics`: inspect the tracked status row for a chapter.
+- `python3 scripts/update_translation_status.py set Basics --rocq rocq/lf/Basics.v --lean lean/lf/Basics.lean --status "ready to study" --notes "..."`: update or create a chapter status row.
+- `python3 scripts/scaffold_lean_chapter.py rocq/lf/Induction.v`: generate a first-pass Lean scaffold from Rocq headings.
+- `scripts/work_on_chapter.sh Basics`: print current status and run the default chapter review workflow.
+- `scripts/work_on_chapter.sh Induction --scaffold`: scaffold a missing Lean chapter and seed its status.
+- `scripts/check_translation_workflow.sh`: validate `TRANSLATION_STATUS.md` and typecheck all Lean chapters.
 
 ## Coding Style & Naming Conventions
 Use ASCII by default. Prefer 2-space indentation in proofs and pattern matches to match the existing Rocq style. Preserve chapter names and theorem/exercise identifiers from Software Foundations unless the translation requires a Lean-specific spelling. In Lean, prefer `namespace` over ad hoc prefixes and use `theorem` for named examples.
