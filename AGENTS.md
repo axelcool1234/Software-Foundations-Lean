@@ -14,8 +14,8 @@ Top-level tooling lives in `flake.nix`, `flake.lock`, and `lean-toolchain`. Shar
 - `cd rocq && make clean`: remove generated Rocq build artifacts.
 - `cd rocq && rocq compile -Q . LF Basics.v`: compile a single chapter.
 - `cd rocq && rocq compile -Q . LF BasicsTest.v`: run the matching chapter test file.
-- `lean lean/lf/Basics.lean`: check a Lean file in this workspace using the repository's `lean-toolchain`.
-- `scripts/check_lean_chapter.sh lean/lf/Basics.lean`: wrapper around the repo's Lean chapter typecheck.
+- `scripts/check_lean_chapter.sh lean/lf/Basics.lean`: typecheck a Lean chapter, building any local imported chapters into the repo-local Lean cache first.
+- `LEAN_PATH=.build/lean lean -R lean lean/lf/Basics.lean`: lower-level equivalent of the repo's Lean chapter check once local imports have been built.
 - `scripts/compare_chapter_headings.sh rocq/lf/Basics.v lean/lf/Basics.lean`: print the heading structure of a Rocq chapter and its Lean translation side by side for review.
 - `scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean`: run the basic structural comparison and Lean typecheck together.
 - `python3 scripts/update_translation_status.py get Basics`: inspect the tracked status row for a chapter.

@@ -60,6 +60,9 @@ Suggested status choices after translation work:
 - Keep headings parallel to the Rocq chapter unless a Lean-specific change is
   clearly better for learning.
 - Do not drop subsection-level prose just because the code is short.
+- When a later chapter depends on an earlier Lean chapter, prefer a real Lean
+  import such as `import lf.Basics` over copying earlier definitions into the
+  new file.
 - Prefer `rfl`, `simp`, `rw`, `cases`, `induction`, and other chapter-
   appropriate Lean proof tools over heavy automation.
 - Use Lean-specific notes when the Lean version intentionally diverges from the
@@ -74,6 +77,8 @@ Suggested status choices after translation work:
   yet and you want a heading-preserving skeleton before translating prose and
   code.
 - `scripts/check_lean_chapter.sh`: use after edits to typecheck the Lean file.
+  It now builds any local imported Lean chapters into `.build/lean/` first, so
+  import-based chapter dependencies are supported by the normal workflow.
 - `scripts/review_chapter_translation.sh`: use when an existing Lean chapter
   should be compared against the Rocq source before or after edits.
 - `scripts/update_translation_status.py get`: read the current chapter row

@@ -34,3 +34,4 @@ history.
 | Chapter | Rocq | Lean | Status | Notes |
 | --- | --- | --- | --- | --- |
 | Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Comparison review and reading-quality pass completed; structure, prose, and chapter-level pedagogy are in good shape. |
+| Induction | `rocq/lf/Induction.v` | `lean/lf/Induction.lean` | ready to study | Structure, prose, and worked proofs are translated; student exercises remain as sorry by design, and the chapter now imports `lf.Basics` like the Rocq original depends on `Basics`. |

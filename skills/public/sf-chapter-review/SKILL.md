@@ -58,6 +58,8 @@ conservative status that still reflects the blocker.
 - Missing or merged subsections.
 - Headings preserved but prose removed.
 - Definitions or examples missing from the Lean version.
+- Chapters that duplicate earlier Lean definitions even though a direct import
+  from a previous chapter would better match the Rocq dependency structure.
 - Exercise names drifting or exercises disappearing.
 - Proofs that are technically valid but poor for learning Lean.
 - Places where a Lean-specific explanatory note would help.
@@ -87,6 +89,9 @@ conservative status that still reflects the blocker.
 - `scripts/work_on_chapter.sh`: optional convenience wrapper for humans. Useful
   for manual chapter workflow, but this skill should still reason explicitly
   about the review findings rather than relying on the wrapper's output alone.
+- `scripts/check_lean_chapter.sh`: import-aware Lean chapter checker. Use it
+  when you need direct verification after review findings or fixes; it builds
+  local imported chapters into `.build/lean/` before checking the target file.
 - `scripts/check_translation_status.py`: repository validation helper, mainly
   for consistency checks and CI. Do not use it as a substitute for chapter
   review.
