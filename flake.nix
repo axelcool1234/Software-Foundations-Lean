@@ -15,6 +15,7 @@
         devShells.default = pkgs.mkShell {
           packages = [
             pkgs.elan
+            pkgs.python3
             pkgs.rocq-core
           ];
          };

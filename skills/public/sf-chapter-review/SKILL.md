@@ -19,12 +19,39 @@ further edits.
 ## Review workflow
 
 1. Identify the Rocq file and Lean file.
-2. Run the heading comparison helper when useful.
-3. Compare the chapter subsection-by-subsection.
-4. Review both code and commentary.
-5. Evaluate proof pedagogy from a Lean-first learning perspective.
-6. Run the Lean typecheck if the task includes verification or fixes.
-7. End with a concise verdict on chapter readiness.
+2. Check `TRANSLATION_STATUS.md` for an existing row for the chapter before starting the review.
+3. Run the heading comparison helper when useful.
+4. Compare the chapter subsection-by-subsection.
+5. Review both code and commentary.
+6. Evaluate proof pedagogy from a Lean-first learning perspective.
+7. Run the Lean typecheck if the task includes verification or fixes.
+8. End with a concise verdict on chapter readiness.
+9. Update `TRANSLATION_STATUS.md` so the chapter row matches the review outcome.
+
+## Status tracking workflow
+
+Treat `TRANSLATION_STATUS.md` as the canonical chapter-level summary, not as a
+full audit log.
+
+- Before reviewing, read the existing chapter row if one exists.
+- Prefer `python scripts/update_translation_status.py get <Chapter>` over manual table scanning when working from the terminal.
+- Use the existing status and notes to understand whether the chapter is still a
+  draft, due for comparison, or awaiting a reading-quality pass.
+- After the review, update the row for that chapter.
+- Prefer `python scripts/update_translation_status.py set ...` over manual table editing.
+- If the chapter is missing from the table, add a new row.
+- Keep the `Notes` field short and current. Replace stale notes instead of
+  appending a long running history.
+
+Suggested verdict-to-status mapping:
+
+- `ready to study` -> `ready to study`
+- `needs prose restoration` -> `needs reading-quality pass`
+- `needs proof-style cleanup` -> `needs reading-quality pass`
+- `needs structural cleanup first` -> `needs comparison review`
+
+If the review finds concrete gaps but fixes are not yet applied, prefer the most
+conservative status that still reflects the blocker.
 
 ## What to look for
 
@@ -51,10 +78,15 @@ further edits.
 - `AGENTS.md`
 - `docs/translation-style.md`
 - `TRANSLATION_STATUS.md`
+- `scripts/update_translation_status.py`
 - `scripts/compare_chapter_headings.sh`
 - `scripts/review_chapter_translation.sh`
 
 ## Common commands
+
+```bash
+python scripts/update_translation_status.py get Basics
+```
 
 ```bash
 scripts/compare_chapter_headings.sh rocq/lf/Basics.v lean/lf/Basics.lean
@@ -64,6 +96,16 @@ scripts/compare_chapter_headings.sh rocq/lf/Basics.v lean/lf/Basics.lean
 scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean
 ```
 
+```bash
+python scripts/update_translation_status.py set Basics \
+  --rocq rocq/lf/Basics.v \
+  --lean lean/lf/Basics.lean \
+  --status "ready to study" \
+  --notes "Comparison review and reading-quality pass completed; structure, prose, and pedagogy are in good shape."
+```
+
 ## If the user also wants fixes
 
 First do the review, then patch the Lean chapter, then rerun the Lean check.
+After the fixes are verified, update `TRANSLATION_STATUS.md` to reflect the new
+post-fix verdict rather than the pre-fix review state.

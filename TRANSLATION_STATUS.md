@@ -13,8 +13,24 @@ just as code artifacts.
 - `ready to study`: chapter compiles, the translation comparison has been done,
   and the reading-quality pass is complete.
 
+## Updating this file
+
+Prefer the helper script over manual table edits when working from the terminal:
+
+```bash
+python3 scripts/update_translation_status.py get Basics
+python3 scripts/update_translation_status.py set Basics \
+  --rocq rocq/lf/Basics.v \
+  --lean lean/lf/Basics.lean \
+  --status "ready to study" \
+  --notes "Comparison review and reading-quality pass completed; structure, prose, and pedagogy are in good shape."
+```
+
+Keep `Notes` short and current. Replace stale notes instead of appending a long
+history.
+
 ## Chapters
 
 | Chapter | Rocq | Lean | Status | Notes |
 | --- | --- | --- | --- | --- |
-| Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | needs reading-quality pass | Compiles; prose and structure were restored, but a final learner-focused pass is still worthwhile. |
+| Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Comparison review and reading-quality pass completed; structure, prose, and chapter-level pedagogy are in good shape. |

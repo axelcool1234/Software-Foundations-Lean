@@ -22,6 +22,21 @@ reader learn to think and prove well in Lean.
 - Commentary that introduces definitions, explains examples, or frames the next
   proof technique.
 
+## Status tracking
+
+After substantial translation or review work, update
+`TRANSLATION_STATUS.md` so the chapter's current readiness is recorded in one
+place. Prefer the helper script over manual table edits:
+
+```bash
+python3 scripts/update_translation_status.py get Basics
+python3 scripts/update_translation_status.py set Basics \
+  --rocq rocq/lf/Basics.v \
+  --lean lean/lf/Basics.lean \
+  --status "needs reading-quality pass" \
+  --notes "Translation compiles and structure is present; do a final learner-focused pass before marking it ready to study."
+```
+
 ## What may change in Lean
 
 - Proof scripts may become more idiomatic Lean.

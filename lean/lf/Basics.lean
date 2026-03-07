@@ -9,10 +9,11 @@ abbrev S : nat → nat := Nat.succ
 
 def pred : nat → nat := Nat.pred
 
-/-
-* Basics: Functional Programming in Lean
+/- ################################################################# -/
+/- * Basics: Functional Programming in Lean -/
 
-This file is a Lean-oriented translation of `rocq/lf/Basics.v`. It keeps the
+/-
+This chapter is a Lean-oriented translation of `rocq/lf/Basics.v`. It keeps the
 chapter-style commentary and the overall progression of the original while
 adapting individual definitions and proofs to Lean 4.
 
@@ -196,10 +197,20 @@ theorem test_orb3 : orb false true = true := by
 theorem test_orb4 : orb true true = true := by
   rfl
 
-theorem test_orb5 : orb false (orb false true) = true := by
+theorem test_orb5 : false || false || true = true := by
   rfl
 
 /-
+Lean's built-in booleans already come with the familiar infix notations `&&`
+and `||`, so we can write the last example in the same more readable style as
+the Rocq text. As in the original chapter, the notation is only surface
+syntax; the underlying boolean operations are what matter in proofs.
+
+This file uses backticks like `andb` and `orb` inside comments where the Rocq
+text would use square brackets around code fragments, but the pedagogical point
+is the same: comments can talk about code while keeping it visually distinct
+from the surrounding prose.
+
 These examples are also an opportunity to show one more feature of the
 language: conditionals. The next three definitions are equivalent to the ones
 above, just written using `if ... then ... else ...` instead of `match`.
@@ -593,6 +604,11 @@ theorem plus_O_n'' : ∀ n : nat, 0 + n = n := by
   intro m
   simp
 
+/-
+Lean's built-in addition is not definitionally reduced in the direction of
+`1 + n = S n`, so this is a good place to use one small arithmetic fact from
+the standard library and then finish by computation.
+-/
 theorem plus_1_l : ∀ n : nat, 1 + n = S n := by
   intro n
   simpa [S] using Nat.one_add n
@@ -639,7 +655,7 @@ theorem mult_n_O : ∀ n : nat, 0 = n * 0 := by
 
 theorem mult_n_Sm : ∀ n m : nat, n * m + n = n * S m := by
   intro n m
-  simpa [Nat.mul_succ]
+  rw [Nat.mul_succ]
 
 #check mult_n_O
 #check mult_n_Sm
@@ -742,6 +758,19 @@ def plus' : nat → nat → nat
 Lean, like Rocq, insists that recursive definitions be structurally recursive
 or otherwise accompanied by a termination argument. This guarantees that the
 functions we define in the logical core terminate on all inputs.
+-/
+
+/- **** Exercise: 2 stars, standard, optional (decreasing)
+
+To get a concrete sense of this restriction, find a way to write a sensible
+recursive definition on numbers that really does terminate on all inputs, but
+that Lean rejects because it cannot recognize the recursion as structurally
+decreasing.
+
+If you choose to experiment with such a definition, keep it commented out so it
+does not prevent the file from elaborating. The point of the exercise is to see
+how the termination checker enforces the same basic discipline discussed in the
+Rocq version of the chapter.
 -/
 
 /- ################################################################# -/

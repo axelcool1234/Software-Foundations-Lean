@@ -18,16 +18,42 @@ Use this skill when the task is to translate a chapter such as
 ## Workflow
 
 1. Identify the Rocq source file and the target Lean file.
-2. If the Lean file already exists, compare the two files subsection-by-
+2. Check `TRANSLATION_STATUS.md` for an existing row for the chapter before starting substantial work.
+3. If the Lean file already exists, compare the two files subsection-by-
    subsection before editing.
-3. Translate definitions, examples, comments, and proof structure in order.
-4. Rewrite prose where the Lean version differs materially and explain the Lean
+4. Translate definitions, examples, comments, and proof structure in order.
+5. Rewrite prose where the Lean version differs materially and explain the Lean
    differences when that helps the reader.
-5. Keep executable examples such as `#eval`, `#check`, and small `theorem`
+6. Keep executable examples such as `#eval`, `#check`, and small `theorem`
    examples when they support the pedagogy.
-6. Typecheck the Lean file.
-7. Do a reading-quality pass as if you were learning the chapter from Lean.
-8. Update `TRANSLATION_STATUS.md` if the chapter status changed.
+7. Typecheck the Lean file.
+8. Do a reading-quality pass as if you were learning the chapter from Lean.
+9. Update `TRANSLATION_STATUS.md` if the chapter status changed.
+
+## Status tracking workflow
+
+Treat `TRANSLATION_STATUS.md` as the chapter-level summary of translation
+readiness.
+
+- Before translating, read the existing chapter row if one exists.
+- Prefer `python scripts/update_translation_status.py get <Chapter>` over
+  manual table scanning when working from the terminal.
+- After translating, update the chapter row with the most accurate current
+  state.
+- Prefer `python scripts/update_translation_status.py set ...` over manual table
+  editing.
+- Keep the `Notes` field short and current rather than appending a long history.
+
+Suggested status choices after translation work:
+
+- `draft translated`: the Lean file exists and roughly covers the chapter, but
+  substantial translation or structural work remains.
+- `needs comparison review`: the translation is present, but the chapter still
+  needs a direct Rocq-vs-Lean comparison review.
+- `needs reading-quality pass`: the translation compiles and structure is in
+  place, but the final learner-focused prose/proof pass is still pending.
+- `ready to study`: translation, comparison review, and reading-quality pass are
+  all complete.
 
 ## Key rules
 
@@ -44,10 +70,15 @@ Use this skill when the task is to translate a chapter such as
 - `AGENTS.md`
 - `docs/translation-style.md`
 - `TRANSLATION_STATUS.md`
+- `scripts/update_translation_status.py`
 - `scripts/check_lean_chapter.sh`
 - `scripts/review_chapter_translation.sh`
 
 ## Common commands
+
+```bash
+python scripts/update_translation_status.py get Basics
+```
 
 ```bash
 scripts/check_lean_chapter.sh lean/lf/Basics.lean
@@ -55,6 +86,14 @@ scripts/check_lean_chapter.sh lean/lf/Basics.lean
 
 ```bash
 scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean
+```
+
+```bash
+python scripts/update_translation_status.py set Basics \
+  --rocq rocq/lf/Basics.v \
+  --lean lean/lf/Basics.lean \
+  --status "needs reading-quality pass" \
+  --notes "Translation compiles and structure is present; do a final learner-focused pass before marking it ready to study."
 ```
 
 ## Deliverable
