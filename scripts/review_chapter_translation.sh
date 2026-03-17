@@ -26,6 +26,14 @@ echo "== Heading comparison =="
 scripts/compare_chapter_headings.sh "$rocq_file" "$lean_file"
 
 echo
+echo "== Exercise comparison =="
+python3 scripts/compare_exercise_translations.py "$rocq_file" "$lean_file"
+
+echo
+echo "== Exercise statements =="
+python3 scripts/compare_exercise_statements.py "$rocq_file" "$lean_file"
+
+echo
 echo "== Lean typecheck =="
 scripts/check_lean_chapter.sh "$lean_file"
 

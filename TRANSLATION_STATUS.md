@@ -35,3 +35,4 @@ history.
 | --- | --- | --- | --- | --- |
 | Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Comparison review and reading-quality pass completed; structure, prose, and chapter-level pedagogy are in good shape. |
 | Induction | `rocq/lf/Induction.v` | `lean/lf/Induction.lean` | ready to study | Structure, prose, and worked proofs are translated; student exercises remain as sorry by design, and the chapter now imports `lf.Basics` like the Rocq original depends on `Basics`. |
+| Lists | `rocq/lf/Lists.v` | `lean/lf/Lists.lean` | needs reading-quality pass | First-pass Lean translation compiles, mirrors the chapter structure, imports lf.Induction, and uses a custom natlist literal `[\| ... \|]`; do a final prose and exercise-presentation polish pass. |

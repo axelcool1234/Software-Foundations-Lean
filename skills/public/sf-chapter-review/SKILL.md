@@ -21,12 +21,14 @@ further edits.
 1. Identify the Rocq file and Lean file.
 2. Check `TRANSLATION_STATUS.md` for an existing row for the chapter before starting the review.
 3. Run the heading comparison helper when useful.
-4. Compare the chapter subsection-by-subsection.
-5. Review both code and commentary.
-6. Evaluate proof pedagogy from a Lean-first learning perspective.
-7. Run the Lean typecheck if the task includes verification or fixes.
-8. End with a concise verdict on chapter readiness.
-9. Update `TRANSLATION_STATUS.md` so the chapter row matches the review outcome.
+4. Run the exercise translation comparison helper to catch missing or weakened exercise declarations.
+5. Run the side-by-side exercise statement view when you want a compact manual check of exercise fidelity without rereading the full chapter.
+6. Compare the chapter subsection-by-subsection.
+7. Review both code and commentary.
+8. Evaluate proof pedagogy from a Lean-first learning perspective.
+9. Run the Lean typecheck if the task includes verification or fixes.
+10. End with a concise verdict on chapter readiness.
+11. Update `TRANSLATION_STATUS.md` so the chapter row matches the review outcome.
 
 ## Status tracking workflow
 
@@ -61,6 +63,12 @@ conservative status that still reflects the blocker.
 - Chapters that duplicate earlier Lean definitions even though a direct import
   from a previous chapter would better match the Rocq dependency structure.
 - Exercise names drifting or exercises disappearing.
+- Exercise-local declarations whose names are preserved but whose statements are
+  suspiciously weakened, such as replacing a meaningful theorem goal with
+  `True`.
+- Cases where the declaration names line up but the side-by-side exercise
+  statement view shows that the Lean statement drifted materially from the Rocq
+  one.
 - Proofs that are technically valid but poor for learning Lean.
 - Places where a Lean-specific explanatory note would help.
 
@@ -82,6 +90,12 @@ conservative status that still reflects the blocker.
   the heading diff.
 - `scripts/compare_chapter_headings.sh`: structure-only helper. Use it when you
   want a quick subsection alignment view before or alongside the deeper review.
+- `scripts/compare_exercise_translations.py`: exercise-aware helper. Use it to
+  compare exercise headings and exercise-local declarations and to catch
+  suspiciously trivialized exercise theorem statements.
+- `scripts/compare_exercise_statements.py`: side-by-side exercise view. Use it
+  for a compact manual comparison of exercise-local declarations and extracted
+  statements without rereading the whole chapter.
 - `scripts/update_translation_status.py get`: read the current chapter row
   before reviewing.
 - `scripts/update_translation_status.py set`: update the chapter row after the
@@ -103,6 +117,8 @@ conservative status that still reflects the blocker.
 - `TRANSLATION_STATUS.md`
 - `scripts/update_translation_status.py`
 - `scripts/compare_chapter_headings.sh`
+- `scripts/compare_exercise_translations.py`
+- `scripts/compare_exercise_statements.py`
 - `scripts/review_chapter_translation.sh`
 
 ## Common commands
@@ -113,6 +129,14 @@ python3 scripts/update_translation_status.py get Basics
 
 ```bash
 scripts/compare_chapter_headings.sh rocq/lf/Basics.v lean/lf/Basics.lean
+```
+
+```bash
+python3 scripts/compare_exercise_translations.py rocq/lf/Basics.v lean/lf/Basics.lean
+```
+
+```bash
+python3 scripts/compare_exercise_statements.py rocq/lf/Basics.v lean/lf/Basics.lean
 ```
 
 ```bash

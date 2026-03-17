@@ -17,7 +17,9 @@ Top-level tooling lives in `flake.nix`, `flake.lock`, and `lean-toolchain`. Shar
 - `scripts/check_lean_chapter.sh lean/lf/Basics.lean`: typecheck a Lean chapter, building any local imported chapters into the repo-local Lean cache first.
 - `LEAN_PATH=.build/lean lean -R lean lean/lf/Basics.lean`: lower-level equivalent of the repo's Lean chapter check once local imports have been built.
 - `scripts/compare_chapter_headings.sh rocq/lf/Basics.v lean/lf/Basics.lean`: print the heading structure of a Rocq chapter and its Lean translation side by side for review.
-- `scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean`: run the basic structural comparison and Lean typecheck together.
+- `python3 scripts/compare_exercise_translations.py rocq/lf/Basics.v lean/lf/Basics.lean`: compare exercise headings and exercise-local declarations, and flag suspiciously weakened Lean exercise statements.
+- `python3 scripts/compare_exercise_statements.py rocq/lf/Basics.v lean/lf/Basics.lean`: print exercise-local declarations and extracted statements side by side for compact manual review.
+- `scripts/review_chapter_translation.sh rocq/lf/Basics.v lean/lf/Basics.lean`: run the heading comparison, exercise comparison, side-by-side exercise statement view, and Lean typecheck together.
 - `python3 scripts/update_translation_status.py get Basics`: inspect the tracked status row for a chapter.
 - `python3 scripts/update_translation_status.py set Basics --rocq rocq/lf/Basics.v --lean lean/lf/Basics.lean --status "ready to study" --notes "..."`: update or create a chapter status row.
 - `python3 scripts/scaffold_lean_chapter.py rocq/lf/Induction.v`: generate a first-pass Lean scaffold from Rocq headings.
@@ -90,6 +92,8 @@ If the user asks to compare a Rocq chapter and its Lean translation before start
 
 - Compare the two files directly, usually subsection-by-subsection, instead of giving a high-level impression.
 - Use `scripts/compare_chapter_headings.sh` when helpful to get a quick structural view before doing the deeper review.
+- Use `python3 scripts/compare_exercise_translations.py` when helpful to compare exercise declarations directly, especially to catch missing or weakened exercise statements.
+- Use `python3 scripts/compare_exercise_statements.py` when helpful to inspect matching exercise statements side by side without rereading the whole chapter.
 - Check both code and commentary. The review should cover definitions, theorem/exercise names, ordering, omitted material, and the presence or absence of textbook-style prose.
 - Distinguish clearly between acceptable Lean adaptations and actual translation gaps. Lean-specific changes in notation, namespace usage, or proof style are good when they improve the Lean version pedagogically.
 - Call out missing subsections, merged subsections, or sections whose headings remain but whose explanatory prose has been dropped.
