@@ -1,0 +1,8 @@
+name = "software_foundations"
+defaultTargets = ["lf"]
+
+[[lean_lib]]
+name = "lf"
+srcDir = "lean"
+roots = ["lf"]
+globs = ["lf.+"]

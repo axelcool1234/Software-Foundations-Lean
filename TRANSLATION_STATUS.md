@@ -36,3 +36,4 @@ history.
 | Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Review rerun after restoring the binary exercise structure and source-faithful `bin` name; prose, structure, and pedagogy are in good shape. |
 | Induction | `rocq/lf/Induction.v` | `lean/lf/Induction.lean` | ready to study | Review rerun; structure, prose, and proof pedagogy remain aligned with the Rocq chapter, and the chapter cleanly builds on lf.Basics. |
 | Lists | `rocq/lf/Lists.v` | `lean/lf/Lists.lean` | ready to study | Review rerun after restoring more learner-facing motivation around generalization and reversal; structure, prose, exercises, and proof pedagogy are in good shape. |
+| Poly | `rocq/lf/Poly.v` | `lean/lf/Poly.lean` | ready to study | Full Lean translation with matching structure and prose; chapter typechecks and student exercises remain as sorry. |
