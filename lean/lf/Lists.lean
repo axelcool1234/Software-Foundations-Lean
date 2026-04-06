@@ -328,7 +328,7 @@ theorem test_add1 : count 1 (add 1 [| 1; 4; 1 |]) = 3 := by
 theorem test_add2 : count 5 (add 1 [| 1; 4; 1 |]) = 0 := by
   sorry
 
-def member (v : nat) (s : bag) : Bool := by
+def member (v : nat) (s : bag) : bool := by
   sorry
 
 theorem test_member1 : member 1 [| 1; 4; 1 |] = true := by
@@ -369,7 +369,7 @@ theorem test_remove_all3 : count 4 (remove_all 5 [| 2; 1; 4; 5; 1; 4 |]) = 2 := 
 theorem test_remove_all4 : count 5 (remove_all 5 [| 2; 1; 5; 4; 5; 1; 4; 5; 1; 4 |]) = 0 := by
   sorry
 
-def included (s1 s2 : bag) : Bool := by
+def included (s1 s2 : bag) : bool := by
   sorry
 
 theorem test_included1 : included [| 1; 2 |] [| 2; 1; 4; 1 |] = true := by
@@ -565,7 +565,7 @@ theorem nonzeros_app : ∀ l1 l2 : natlist,
 
 /- **** Exercise: 2 stars, standard (eqblist) -/
 
-def eqblist (l1 l2 : natlist) : Bool := by
+def eqblist (l1 l2 : natlist) : bool := by
   sorry
 
 theorem test_eqblist1 : eqblist natlist.nil natlist.nil = true := by
@@ -719,7 +719,7 @@ inductive SFId where
   | Id (n : nat)
   deriving Repr, DecidableEq
 
-def eqb_id (x1 x2 : SFId) : Bool :=
+def eqb_id (x1 x2 : SFId) : bool :=
   match x1, x2 with
   | SFId.Id n1, SFId.Id n2 => eqb n1 n2
 

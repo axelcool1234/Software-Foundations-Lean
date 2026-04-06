@@ -304,7 +304,7 @@ theorem leb_refl : ∀ n : nat, leb n n = true := by
 theorem zero_neqb_S : ∀ n : nat, eqb 0 (S n) = false := by
   sorry
 
-theorem andb_false_r : ∀ b : Bool, andb b false = false := by
+theorem andb_false_r : ∀ b : bool, andb b false = false := by
   sorry
 
 theorem S_neqb_0 : ∀ n : nat, eqb (S n) 0 = false := by
@@ -313,7 +313,7 @@ theorem S_neqb_0 : ∀ n : nat, eqb (S n) 0 = false := by
 theorem mult_1_l : ∀ n : nat, 1 * n = n := by
   sorry
 
-theorem all3_spec : ∀ b c : Bool,
+theorem all3_spec : ∀ b c : bool,
     orb (andb b c) (orb (negb b) (negb c)) = true := by
   sorry
 

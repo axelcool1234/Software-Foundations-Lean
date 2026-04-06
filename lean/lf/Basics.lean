@@ -161,29 +161,58 @@ Here that functionality comes from `Std`.
 /- ** Booleans -/
 
 /-
-For the sake of building things up from first principles, the Rocq chapter
-defines its own booleans. In Lean we reuse the built-in `Bool`, but we still
-define the chapter's boolean operations explicitly so that later proofs talk
-about these definitions rather than library lemmas hidden behind notation.
+Following the pattern of the days of the week above, we can define our own
+boolean type from scratch, with members `true` and `false`.
+
+Lean already comes with the standard type `Bool`, and the lowercase name
+`bool` is also used internally by Lean's prelude. To keep the chapter close to
+the Rocq presentation, we give the underlying declaration a chapter-specific
+name and then immediately introduce the familiar notation `bool`, `true`, and
+`false` for it. The rest of the chapter can therefore read much like the Rocq
+original while still coexisting peacefully with Lean's built-in booleans.
+
+Functions over booleans can be defined in the same way as above.
+
+Although we are rolling our own booleans here for the sake of building things
+up from scratch, Lean of course provides a default implementation of booleans,
+together with a multitude of useful functions and lemmas. Wherever possible,
+we name our definitions to match the ones from the standard library.
 
 The last two definitions below illustrate Lean's syntax for multi-argument
 functions, and the following examples collectively form a truth table for `orb`.
 -/
 
-def negb (b : Bool) : Bool :=
+inductive SFBool where
+  | true
+  | false
+  deriving Repr, DecidableEq
+
+notation "bool" => SFBool
+notation "true" => SFBool.true
+notation "false" => SFBool.false
+
+instance : Coe bool Bool where
+  coe
+    | true => Bool.true
+    | false => Bool.false
+
+def negb (b : bool) : bool :=
   match b with
   | true => false
   | false => true
 
-def andb (b1 : Bool) (b2 : Bool) : Bool :=
+def andb (b1 : bool) (b2 : bool) : bool :=
   match b1 with
   | true => b2
   | false => false
 
-def orb (b1 : Bool) (b2 : Bool) : Bool :=
+def orb (b1 : bool) (b2 : bool) : bool :=
   match b1 with
   | true => true
   | false => b2
+
+infixr:35 " && " => andb
+infixr:30 " || " => orb
 
 theorem test_orb1 : orb true false = true := by
   rfl
@@ -197,14 +226,12 @@ theorem test_orb3 : orb false true = true := by
 theorem test_orb4 : orb true true = true := by
   rfl
 
-theorem test_orb5 : false || false || true = true := by
+theorem test_orb5 : (false || false || true) = true := by
   rfl
 
 /-
-Lean's built-in booleans already come with the familiar infix notations `&&`
-and `||`, so we can write the last example in the same more readable style as
-the Rocq text. As in the original chapter, the notation is only surface
-syntax; the underlying boolean operations are what matter in proofs.
+As in the Rocq text, the notation is only surface syntax; the underlying
+boolean operations are what matter in proofs.
 
 This file uses backticks like `andb` and `orb` inside comments where the Rocq
 text would use square brackets around code fragments, but the pedagogical point
@@ -214,22 +241,25 @@ from the surrounding prose.
 These examples are also an opportunity to show one more feature of the
 language: conditionals. The next three definitions are equivalent to the ones
 above, just written using `if ... then ... else ...` instead of `match`.
+
+The coercion from the chapter's `bool` to Lean's built-in `Bool` lets these
+conditionals read just like the Rocq originals.
 -/
 
-def negb' (b : Bool) : Bool :=
+def negb' (b : bool) : bool :=
   if b then false else true
 
-def andb' (b1 : Bool) (b2 : Bool) : Bool :=
+def andb' (b1 : bool) (b2 : bool) : bool :=
   if b1 then b2 else false
 
-def orb' (b1 : Bool) (b2 : Bool) : Bool :=
+def orb' (b1 : bool) (b2 : bool) : bool :=
   if b1 then true else b2
 
 /-
 Rocq's `if` expression can branch on any two-constructor inductive. Lean's
 `if` is less general: it branches on booleans or propositions with a
-decidability instance. So for the next datatype we use pattern matching rather
-than a generalized conditional.
+decidability instance. For the next datatype we can recover the same style by
+giving Lean an explicit coercion from that datatype to its built-in `Bool`.
 -/
 
 inductive Bw where
@@ -241,10 +271,13 @@ abbrev bw := Bw
 
 open Bw
 
+instance : Coe bw Bool where
+  coe
+    | bw_black => Bool.true
+    | bw_white => Bool.false
+
 def invert (x : bw) : bw :=
-  match x with
-  | bw_black => bw_white
-  | bw_white => bw_black
+  if x then bw_white else bw_black
 
 #eval invert bw_black
 -- bw_white
@@ -254,7 +287,7 @@ def invert (x : bw) : bw :=
 
 /- **** Exercise: 1 star, standard (nandb) -/
 
-def nandb (b1 : Bool) (b2 : Bool) : Bool := by
+def nandb (b1 : bool) (b2 : bool) : bool := by
   sorry
 
 theorem test_nandb1 : nandb true false = true := by
@@ -271,7 +304,7 @@ theorem test_nandb4 : nandb true true = false := by
 
 /- **** Exercise: 1 star, standard (andb3) -/
 
-def andb3 (b1 : Bool) (b2 : Bool) (b3 : Bool) : Bool := by
+def andb3 (b1 : bool) (b2 : bool) (b3 : bool) : bool := by
   sorry
 
 theorem test_andb31 : andb3 true true true = true := by
@@ -295,14 +328,14 @@ The `#check` command asks Lean to print the type of an expression, or verify it
 against an explicitly supplied type annotation.
 
 Functions are values too. Their types are function types, written with arrows.
-So `Bool -> Bool` can be read as: given an input of type `Bool`, this function
-produces an output of type `Bool`.
+So `bool -> bool` can be read as: given an input of type `bool`, this function
+produces an output of type `bool`.
 -/
 
 #check true
-#check (true : Bool)
-#check (negb true : Bool)
-#check (negb : Bool → Bool)
+#check (true : bool)
+#check (negb true : bool)
+#check (negb : bool → bool)
 
 /- ================================================================= -/
 /- ** New Types from Old -/
@@ -337,13 +370,13 @@ abbrev color := Color
 
 open Color
 
-def monochrome (c : color) : Bool :=
+def monochrome (c : color) : bool :=
   match c with
   | black => true
   | white => true
   | primary _ => false
 
-def isred (c : color) : Bool :=
+def isred (c : color) : bool :=
   match c with
   | black => false
   | white => false
@@ -369,10 +402,10 @@ def foo : rgb := blue
 
 end Playground
 
-def foo : Bool := true
+def foo : bool := true
 
 #check (Playground.foo : rgb)
-#check (foo : Bool)
+#check (foo : bool)
 
 /- ================================================================= -/
 /- ** Tuples -/
@@ -412,7 +445,7 @@ As in the Rocq text, the `bits` constructor is just a wrapper. Pattern
 matching lets us open it back up and inspect the four components.
 -/
 
-def all_zero (nb : nybble) : Bool :=
+def all_zero (nb : nybble) : bool :=
   match nb with
   | bits B0 B0 B0 B0 => true
   | bits _ _ _ _ => false
@@ -474,7 +507,7 @@ def minustwo (n : nat) : nat :=
 #check (pred : nat → nat)
 #check (minustwo : nat → nat)
 
-def even : nat → Bool
+def even : nat → bool
   | 0 => true
   | 1 => false
   | Nat.succ (Nat.succ n') => even n'
@@ -485,7 +518,7 @@ enough; we also need recursion. The definition of `even` works by reducing the
 problem on `n` to the smaller problem on `n - 2`.
 -/
 
-def odd (n : nat) : Bool :=
+def odd (n : nat) : bool :=
   negb (even n)
 
 theorem test_odd1 : odd 1 = true := by
@@ -535,13 +568,13 @@ theorem test_factorial2 : factorial 5 = 10 * 12 := by
 
 #check (((0 : nat) + 1) + 1 : nat)
 
-def eqb : nat → nat → Bool
+def eqb : nat → nat → bool
   | 0, 0 => true
   | 0, Nat.succ _ => false
   | Nat.succ _, 0 => false
   | Nat.succ n', Nat.succ m' => eqb n' m'
 
-def leb : nat → nat → Bool
+def leb : nat → nat → bool
   | 0, _ => true
   | Nat.succ _, 0 => false
   | Nat.succ n', Nat.succ m' => leb n' m'
@@ -560,7 +593,7 @@ theorem test_leb3' : leb 4 2 = false := by
 
 /- **** Exercise: 1 star, standard (ltb) -/
 
-def ltb (n m : nat) : Bool := by
+def ltb (n m : nat) : bool := by
   sorry
 
 theorem test_ltb1 : ltb 2 2 = false := by
@@ -690,26 +723,26 @@ theorem plus_1_neq_0 : ∀ n : nat, eqb (n + 1) 0 = false := by
   intro n
   cases n <;> rfl
 
-theorem negb_involutive : ∀ b : Bool, negb (negb b) = b := by
+theorem negb_involutive : ∀ b : bool, negb (negb b) = b := by
   intro b
   cases b <;> rfl
 
-theorem andb_commutative : ∀ b c : Bool, andb b c = andb c b := by
+theorem andb_commutative : ∀ b c : bool, andb b c = andb c b := by
   intro b c
   cases b <;> cases c <;> rfl
 
-theorem andb_commutative' : ∀ b c : Bool, andb b c = andb c b := by
+theorem andb_commutative' : ∀ b c : bool, andb b c = andb c b := by
   intro b c
   cases b <;> cases c <;> rfl
 
 theorem andb3_exchange :
-    ∀ b c d : Bool, andb (andb b c) d = andb (andb b d) c := by
+    ∀ b c d : bool, andb (andb b c) d = andb (andb b d) c := by
   intro b c d
   cases b <;> cases c <;> cases d <;> rfl
 
 /- **** Exercise: 2 stars, standard (andb_true_elim2) -/
 
-theorem andb_true_elim2 : ∀ b c : Bool,
+theorem andb_true_elim2 : ∀ b c : bool,
     andb b c = true → c = true := by
   sorry
 
@@ -717,7 +750,7 @@ theorem plus_1_neq_0' : ∀ n : nat, eqb (n + 1) 0 = false
   | 0 => rfl
   | Nat.succ _ => rfl
 
-theorem andb_commutative'' : ∀ b c : Bool, andb b c = andb c b
+theorem andb_commutative'' : ∀ b c : bool, andb b c = andb c b
   | true, true => rfl
   | true, false => rfl
   | false, true => rfl
@@ -793,17 +826,17 @@ the previous sections instead of using only direct computation.
 /- **** Exercise: 1 star, standard (identity_fn_applied_twice) -/
 
 theorem identity_fn_applied_twice :
-    ∀ (f : Bool → Bool),
-      (∀ x : Bool, f x = x) →
-      ∀ b : Bool, f (f b) = b := by
+    ∀ (f : bool → bool),
+      (∀ x : bool, f x = x) →
+      ∀ b : bool, f (f b) = b := by
   sorry
 
 /- **** Exercise: 1 star, standard (negation_fn_applied_twice) -/
 
 theorem negation_fn_applied_twice :
-    ∀ (f : Bool → Bool),
-      (∀ x : Bool, f x = negb x) →
-      ∀ b : Bool, f (f b) = b := by
+    ∀ (f : bool → bool),
+      (∀ x : bool, f x = negb x) →
+      ∀ b : bool, f (f b) = b := by
   sorry
 
 def manual_grade_for_negation_fn_applied_twice : Option (Nat × String) :=
@@ -812,7 +845,7 @@ def manual_grade_for_negation_fn_applied_twice : Option (Nat × String) :=
 /- **** Exercise: 3 stars, standard, optional (andb_eq_orb) -/
 
 theorem andb_eq_orb :
-    ∀ b c : Bool,
+    ∀ b c : bool,
       andb b c = orb b c →
       b = c := by
   sorry
