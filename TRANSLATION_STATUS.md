@@ -33,6 +33,6 @@ history.
 
 | Chapter | Rocq | Lean | Status | Notes |
 | --- | --- | --- | --- | --- |
-| Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Comparison review rerun after restoring the chapter-local boolean; structure, prose, and pedagogy are in good shape, and the binary exercise helper warning is a false positive. |
-| Induction | `rocq/lf/Induction.v` | `lean/lf/Induction.lean` | ready to study | Comparison review rerun; structure, prose, and proof pedagogy are aligned with the Rocq chapter, and the chapter cleanly builds on lf.Basics. |
-| Lists | `rocq/lf/Lists.v` | `lean/lf/Lists.lean` | ready to study | Comparison review and reading-quality pass completed; structure, prose, exercises, and proof pedagogy are in good shape, and the chapter imports lf.Induction cleanly. |
+| Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Review rerun after restoring the binary exercise structure and source-faithful `bin` name; prose, structure, and pedagogy are in good shape. |
+| Induction | `rocq/lf/Induction.v` | `lean/lf/Induction.lean` | ready to study | Review rerun; structure, prose, and proof pedagogy remain aligned with the Rocq chapter, and the chapter cleanly builds on lf.Basics. |
+| Lists | `rocq/lf/Lists.v` | `lean/lf/Lists.lean` | ready to study | Review rerun after restoring more learner-facing motivation around generalization and reversal; structure, prose, exercises, and proof pedagogy are in good shape. |

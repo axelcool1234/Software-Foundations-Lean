@@ -1065,22 +1065,42 @@ end LateDays
 /- ** Binary Numerals -/
 
 /-
-The final exercise generalizes unary numerals to a binary representation. As in
-the original chapter, the low-order bit is kept on the left because that makes
-recursive processing simpler.
+The final exercise generalizes unary numerals to a binary representation.
 -/
 
-inductive Bin where
+/- **** Exercise: 3 stars, standard (binary) -/
+
+/-
+As in the Rocq chapter, we treat a binary numeral as a sequence of `B0` and
+`B1` constructors terminated by `Z`. For comparison:
+
+  decimal               binary                          unary
+     0                       Z                              O
+     1                    B1 Z                            S O
+     2                B0 (B1 Z)                        S (S O)
+     3                B1 (B1 Z)                     S (S (S O))
+     4            B0 (B0 (B1 Z))                 S (S (S (S O)))
+     5            B1 (B0 (B1 Z))              S (S (S (S (S O))))
+     6            B0 (B1 (B1 Z))           S (S (S (S (S (S O)))))
+     7            B1 (B1 (B1 Z))        S (S (S (S (S (S (S O))))))
+     8        B0 (B0 (B0 (B1 Z)))    S (S (S (S (S (S (S (S O)))))))
+
+Note that the low-order bit is on the left and the high-order bit is on the
+right, just as in the Rocq text. This is the opposite of ordinary written
+binary notation, but it makes recursive definitions such as increment easier to
+write.
+
+The exercise asks for an increment function `incr` on binary numerals together
+with a conversion function `bin_to_nat` back to unary naturals.
+-/
+
+inductive bin where
   | Z
-  | B0 (n : Bin)
-  | B1 (n : Bin)
+  | B0 (n : bin)
+  | B1 (n : bin)
   deriving Repr, DecidableEq
 
-abbrev bin := Bin
-
-open Bin
-
-/- **** Exercise: 3 stars, standard (binary) -/
+open bin
 
 def incr (m : bin) : bin := by
   sorry
@@ -1118,10 +1138,11 @@ theorem test_bin_incr7 :
 /-
 The Rocq chapter closes by describing how to run the accompanying test script.
 For this Lean translation, the corresponding lightweight check is simply to ask
-Lean to elaborate the file:
+the repository helper to elaborate the file:
 
-  elan run leanprover/lean4-nightly:nightly-2026-03-02 lean lean/lf/Basics.lean
+  scripts/check_lean_chapter.sh lean/lf/Basics.lean
 
-This chapter deliberately leaves student exercises as `sorry`, so the file is
-meant to be readable and typecheckable rather than fully solved.
+Since student exercises are intentionally left as `sorry`, this check is
+expected to report warnings about incomplete declarations while still confirming
+that the chapter elaborates successfully.
 -/

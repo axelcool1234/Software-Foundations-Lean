@@ -3,7 +3,7 @@ import lf.Basics
 set_option autoImplicit false
 
 open NatPlayground2 (minus)
-open Bin
+open bin
 
 /- ################################################################# -/
 /- * Induction: Proof by Induction -/

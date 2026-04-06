@@ -445,6 +445,13 @@ definition of `app`.
 Sometimes an attempted induction gets stuck because the induction hypothesis is
 too weak. The cure is to generalize the statement so that the induction
 hypothesis becomes stronger.
+
+The Rocq chapter makes this point by starting with a proof attempt that keeps
+both copies of `repeat` synchronized too rigidly. After inducting on the first
+counter, the induction hypothesis talks only about `repeat n c' ++ repeat n c'`,
+while the successor case really wants to compare against `repeat n (c' + S c')`.
+Lean runs into the same issue: the proof gets easier only after we generalize
+the second summand and ask for a theorem that works for any `c2`.
 -/
 
 theorem repeat_plus : ∀ c1 c2 n : nat,
@@ -478,6 +485,16 @@ theorem test_rev2 : rev natlist.nil = natlist.nil := by
 /-
 As in the Rocq chapter, the direct proof that reversal preserves length gets
 stuck until we first prove a more general lemma about appending a singleton.
+The interesting point is not just that the first proof fails, but why it fails:
+after simplifying `rev (n ::: l')`, the goal contains an append, while the
+induction hypothesis says something only about `length (rev l')`. Rewriting by
+the induction hypothesis helps a little, but it does not explain how appending
+one more element changes length.
+
+The Rocq text then shows a second failed attempt with a lemma specialized to
+reversed lists. That version is still too narrow. The useful idea is to step
+back once more and prove a fact about arbitrary lists, because that stronger
+statement is exactly what the reversal proof needs.
 -/
 
 theorem app_length_S : ∀ l : natlist, ∀ n : nat, length (l ++ [| n |]) = Nat.succ (length l) := by
@@ -500,7 +517,9 @@ theorem rev_length : ∀ l : natlist, length (rev l) = length l := by
 
 /-
 The singleton lemma is useful on its own, but it also points toward a still
-more general statement about the length of any append.
+more general statement about the length of any append. This is the same
+pedagogical pattern as before: once a narrowly targeted helper lemma works, it
+is worth asking whether a cleaner and more reusable version is available.
 -/
 
 theorem app_length : ∀ l1 l2 : natlist, length (l1 ++ l2) = length l1 + length l2 := by
@@ -515,6 +534,9 @@ theorem app_length : ∀ l1 l2 : natlist, length (l1 ++ l2) = length l1 + length
 The Rocq chapter includes informal proofs here too. The same pedagogical moral
 applies in Lean: a compact tactic script may be correct, but a learner still
 benefits from prose that points out where the induction hypothesis is used.
+For `app_length`, the induction is on the first list; the empty case is just
+computation, and the nonempty case reduces to the induction hypothesis after
+one application of the definitions of `app` and `length`.
 -/
 
 /- ================================================================= -/
