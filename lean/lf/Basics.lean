@@ -280,37 +280,37 @@ def invert (x : bw) : bw :=
 
 /- **** Exercise: 1 star, standard (nandb) -/
 
-def nandb (b1 : bool) (b2 : bool) : bool := by
-  sorry
+def nandb (b1 : bool) (b2 : bool) : bool := 
+  negb (andb b1 b2)
 
 theorem test_nandb1 : nandb true false = true := by
-  sorry
+  rfl
 
 theorem test_nandb2 : nandb false false = true := by
-  sorry
+  rfl
 
 theorem test_nandb3 : nandb false true = true := by
-  sorry
+  rfl
 
 theorem test_nandb4 : nandb true true = false := by
-  sorry
+  rfl
 
 /- **** Exercise: 1 star, standard (andb3) -/
 
-def andb3 (b1 : bool) (b2 : bool) (b3 : bool) : bool := by
-  sorry
+def andb3 (b1 : bool) (b2 : bool) (b3 : bool) : bool := 
+  andb (andb b1 b2) b3
 
 theorem test_andb31 : andb3 true true true = true := by
-  sorry
+  rfl
 
 theorem test_andb32 : andb3 false true true = false := by
-  sorry
+  rfl
 
 theorem test_andb33 : andb3 true false true = false := by
-  sorry
+  rfl
 
 theorem test_andb34 : andb3 true true false = false := by
-  sorry
+  rfl
 
 /- ================================================================= -/
 /- ** Types -/
@@ -566,14 +566,16 @@ def exp (base power : nat) : nat :=
 
 /- **** Exercise: 1 star, standard (factorial) -/
 
-def factorial (n : nat) : nat := by
-  sorry
+def factorial (n : nat) : nat :=
+  match n with
+  | 0 => 1
+  | Nat.succ n' => n * (factorial n')
 
 theorem test_factorial1 : factorial 3 = 6 := by
-  sorry
+  rfl
 
 theorem test_factorial2 : factorial 5 = mult 10 12 := by
-  sorry
+  rfl
 
 /-
 Again, we can make numerical expressions easier to read and write by using the
@@ -666,17 +668,19 @@ theorem test_leb3' : leb 4 2 = false := by
 
 /- **** Exercise: 1 star, standard (ltb) -/
 
-def ltb (n m : nat) : bool := by
-  sorry
+def ltb : nat -> nat -> bool   
+  | _, 0 => false
+  | 0, _ => true
+  | Nat.succ n, Nat.succ m => ltb n m
 
 theorem test_ltb1 : ltb 2 2 = false := by
-  sorry
+  rfl
 
 theorem test_ltb2 : ltb 2 4 = true := by
-  sorry
+  rfl
 
 theorem test_ltb3 : ltb 4 2 = false := by
-  sorry
+  rfl
 
 /- ################################################################# -/
 /- * Proof by Simplification -/
@@ -746,7 +750,8 @@ theorem plus_id_example : ∀ n m : nat,
 
 theorem plus_id_exercise : ∀ n m o : nat,
     n = m → m = o → n + m = m + o := by
-  sorry
+  intro n m o h₁ h₂ 
+  rw [h₁, h₂]
 
 theorem mult_n_O : ∀ n : nat, 0 = n * 0 := by
   intro n
@@ -772,7 +777,10 @@ theorem mult_n_0_m_0 : ∀ p q : nat, (p * 0) + (q * 0) = 0 := by
 /- **** Exercise: 1 star, standard (mult_n_1) -/
 
 theorem mult_n_1 : ∀ p : nat, p * 1 = p := by
-  sorry
+  intro p
+  rw [<- mult_n_Sm]
+  rw [<- mult_n_O] 
+  rw [plus_O_n]
 
 /- ################################################################# -/
 /- * Proof by Case Analysis -/
@@ -816,7 +824,11 @@ theorem andb3_exchange :
 
 theorem andb_true_elim2 : ∀ b c : bool,
     andb b c = true → c = true := by
-  sorry
+  intro b c h
+  cases b <;> cases c <;> rw [andb] at h <;> exact h
+  /- Also works (but I am avoiding simp sometimes to learn): -/
+  /- cases b <;> cases c <;> simp [andb] at *  -/
+  /- cases b <;> cases c <;> simp [andb] at h ⊢ -/
 
 theorem plus_1_neq_0' : ∀ n : nat, eqb (n + 1) 0 = false
   | 0 => rfl
@@ -831,7 +843,8 @@ theorem andb_commutative'' : ∀ b c : bool, andb b c = andb c b
 /- **** Exercise: 1 star, standard (zero_nbeq_plus_1) -/
 
 theorem zero_nbeq_plus_1 : ∀ n : nat, eqb 0 (n + 1) = false := by
-  sorry
+  intro n
+  cases n <;> rfl
 
 /- ================================================================= -/
 /- ** More on Notation (Optional) -/
@@ -901,7 +914,8 @@ theorem identity_fn_applied_twice :
     ∀ (f : bool → bool),
       (∀ x : bool, f x = x) →
       ∀ b : bool, f (f b) = b := by
-  sorry
+  intro f x b
+  repeat rw [x]
 
 /- **** Exercise: 1 star, standard (negation_fn_applied_twice) -/
 
@@ -909,7 +923,9 @@ theorem negation_fn_applied_twice :
     ∀ (f : bool → bool),
       (∀ x : bool, f x = negb x) →
       ∀ b : bool, f (f b) = b := by
-  sorry
+  intro f x b
+  repeat rw [x] 
+  cases b <;> repeat rw [negb]
 
 def manual_grade_for_negation_fn_applied_twice : Option (Nat × String) :=
   none
@@ -920,7 +936,10 @@ theorem andb_eq_orb :
     ∀ b c : bool,
       andb b c = orb b c →
       b = c := by
-  sorry
+  intro b c h
+  cases b <;> cases c <;> rw [andb, orb] at h <;> first | apply h | symm; apply h 
+  /- Also works: -/
+  /- cases b <;> cases c <;> simp? [andb, orb] at *  -/
 
 /- ================================================================= -/
 /- ** Course Late Policies, Formalized -/
@@ -1000,7 +1019,10 @@ def letter_comparison (l1 l2 : letter) : comparison :=
 
 theorem letter_comparison_Eq :
     ∀ l : letter, letter_comparison l l = Comparison.Eq := by
-  sorry
+  intro l
+  cases l <;> rw [letter_comparison]
+  /- Also works: -/
+  /- cases l <;> rfl -/
 
 def modifier_comparison (m1 m2 : modifier) : comparison :=
   match m1, m2 with
@@ -1015,24 +1037,26 @@ def modifier_comparison (m1 m2 : modifier) : comparison :=
 
 /- **** Exercise: 2 stars, standard (grade_comparison) -/
 
-def grade_comparison (g1 g2 : grade) : comparison := by
-  sorry
+def grade_comparison (g1 g2 : grade) : comparison := 
+  match (letter_comparison g1.1 g2.1), (modifier_comparison g1.2 g2.2) with
+  | Comparison.Eq, mc => mc 
+  | lc, _ => lc
 
 theorem test_grade_comparison1 :
     grade_comparison (Grade A Minus) (Grade B Plus) = Comparison.Gt := by
-  sorry
+  rfl
 
 theorem test_grade_comparison2 :
     grade_comparison (Grade A Minus) (Grade A Plus) = Comparison.Lt := by
-  sorry
+  rfl
 
 theorem test_grade_comparison3 :
     grade_comparison (Grade F Plus) (Grade F Plus) = Comparison.Eq := by
-  sorry
+  rfl
 
 theorem test_grade_comparison4 :
     grade_comparison (Grade B Minus) (Grade C Plus) = Comparison.Gt := by
-  sorry
+  rfl
 
 def lower_letter (l : letter) : letter :=
   match l with
@@ -1051,44 +1075,51 @@ theorem lower_letter_lowers :
     ∀ l : letter,
       letter_comparison F l = Comparison.Lt →
       letter_comparison (lower_letter l) l = Comparison.Lt := by
-  sorry
+  intro l h
+  cases l
+  case F => apply h 
+  all_goals rfl
 
 /- **** Exercise: 2 stars, standard (lower_grade) -/
 
-def lower_grade (g : grade) : grade := by
-  sorry
+def lower_grade (g : grade) : grade :=
+  match g.1, g.2 with
+  | F, Minus => g
+  | l, Minus => ⟨lower_letter l, Plus⟩
+  | l, Natural => ⟨l, Minus⟩
+  | l, Plus => ⟨l, Natural⟩
 
 theorem lower_grade_A_Plus :
     lower_grade (Grade A Plus) = Grade A Natural := by
-  sorry
+  rfl
 
 theorem lower_grade_A_Natural :
     lower_grade (Grade A Natural) = Grade A Minus := by
-  sorry
+  rfl
 
 theorem lower_grade_A_Minus :
     lower_grade (Grade A Minus) = Grade B Plus := by
-  sorry
+  rfl
 
 theorem lower_grade_B_Plus :
     lower_grade (Grade B Plus) = Grade B Natural := by
-  sorry
+  rfl
 
 theorem lower_grade_F_Natural :
     lower_grade (Grade F Natural) = Grade F Minus := by
-  sorry
+  rfl
 
 theorem lower_grade_twice :
     lower_grade (lower_grade (Grade B Minus)) = Grade C Natural := by
-  sorry
+  rfl
 
 theorem lower_grade_thrice :
     lower_grade (lower_grade (lower_grade (Grade B Minus))) = Grade C Minus := by
-  sorry
+  rfl
 
 theorem lower_grade_F_Minus :
     lower_grade (Grade F Minus) = Grade F Minus := by
-  sorry
+  rfl
 
 /- **** Exercise: 3 stars, standard (lower_grade_lowers) -/
 
@@ -1096,7 +1127,14 @@ theorem lower_grade_lowers :
     ∀ g : grade,
       grade_comparison (Grade F Minus) g = Comparison.Lt →
       grade_comparison (lower_grade g) g = Comparison.Lt := by
-  sorry
+  intro g h
+  cases g with
+  | Grade l m =>
+    cases l <;> cases m <;> assumption
+    /- Also works: -/
+    /- cases l <;> cases m -/
+    /- case Grade.F.Minus => apply h -/
+    /- all_goals rfl -/
 
 def apply_late_policy (late_days : nat) (g : grade) : grade :=
   if ltb late_days 9 then g
@@ -1120,7 +1158,9 @@ theorem no_penalty_for_mostly_on_time :
     ∀ (late_days : nat) (g : grade),
       ltb late_days 9 = true →
       apply_late_policy late_days g = g := by
-  sorry
+  intro late_days g h
+  rw [apply_late_policy_unfold, h]
+  simp
 
 /- **** Exercise: 2 stars, standard (graded_lowered_once) -/
 
@@ -1129,7 +1169,9 @@ theorem grade_lowered_once :
       ltb late_days 9 = false →
       ltb late_days 17 = true →
       apply_late_policy late_days g = lower_grade g := by
-  sorry
+  intro late_days g h₁ h₂
+  rw [apply_late_policy_unfold, h₁, h₂]
+  simp
 
 end LateDays
 
@@ -1174,35 +1216,42 @@ inductive bin where
 
 open bin
 
-def incr (m : bin) : bin := by
-  sorry
+def incr (m : bin) : bin := 
+  match m with
+  | Z => B1 (m)  
+  | B0 n => B1 n 
+  | B1 n => B0 (incr n)
 
-def bin_to_nat (m : bin) : nat := by
-  sorry
+def bin_to_nat (m : bin) : nat :=
+  match m with 
+  | Z => 0
+  | B1 Z => 1
+  | B0 n => 2 * bin_to_nat n
+  | B1 n => 2 + bin_to_nat n
 
 theorem test_bin_incr1 : incr (B1 Z) = B0 (B1 Z) := by
-  sorry
+  rfl
 
 theorem test_bin_incr2 : incr (B0 (B1 Z)) = B1 (B1 Z) := by
-  sorry
+  rfl
 
 theorem test_bin_incr3 : incr (B1 (B1 Z)) = B0 (B0 (B1 Z)) := by
-  sorry
+  rfl
 
 theorem test_bin_incr4 : bin_to_nat (B0 (B1 Z)) = 2 := by
-  sorry
+  rfl
 
 theorem test_bin_incr5 :
     bin_to_nat (incr (B1 Z)) = 1 + bin_to_nat (B1 Z) := by
-  sorry
+  rfl
 
 theorem test_bin_incr6 :
     bin_to_nat (incr (incr (B1 Z))) = 2 + bin_to_nat (B1 Z) := by
-  sorry
+  rfl
 
 theorem test_bin_incr7 :
     bin_to_nat (B0 (B0 (B0 (B1 Z)))) = 8 := by
-  sorry
+  rfl
 
 /- ################################################################# -/
 /- * Optional: Testing Your Solutions -/
