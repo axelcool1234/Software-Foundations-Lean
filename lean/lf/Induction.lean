@@ -118,9 +118,10 @@ theorem plus_n_Sm : ∀ n m : nat, S (n + m) = n + S m := by
   intro n m
   induction n with
   | zero => repeat rw [plus_O_n]
-  | succ n ih => 
-    /- simp only [<- plus_1_l] -/
-    /- simp only [Nat.succ_eq_add_one] -/
+  | succ n ih =>  
+    rw [<- plus_1_l]
+    change S (S (n + m)) = S (n + S m)
+
 
 
 theorem add_comm : ∀ n m : nat, n + m = m + n := by
