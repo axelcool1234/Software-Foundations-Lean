@@ -33,9 +33,9 @@ history.
 
 | Chapter | Rocq | Lean | Status | Notes |
 | --- | --- | --- | --- | --- |
-| Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Review rerun after restoring the binary exercise structure and source-faithful `bin` name; prose, structure, and pedagogy are in good shape. |
-| Induction | `rocq/lf/Induction.v` | `lean/lf/Induction.lean` | ready to study | Review rerun; structure, prose, and proof pedagogy remain aligned with the Rocq chapter, and the chapter cleanly builds on lf.Basics. |
+| Basics | `rocq/lf/Basics.v` | `lean/lf/Basics.lean` | ready to study | Restored chapter-local `+`, `-`, and `*` via Lean arithmetic instances so later chapters now inherit the Rocq-style custom arithmetic. |
+| Induction | `rocq/lf/Induction.v` | `lean/lf/Induction.lean` | ready to study | Adjusted the finished proofs to use the chapter-local arithmetic inherited from Basics, matching the Rocq chapter's notation more closely. |
 | Lists | `rocq/lf/Lists.v` | `lean/lf/Lists.lean` | ready to study | Review rerun after restoring more learner-facing motivation around generalization and reversal; structure, prose, exercises, and proof pedagogy are in good shape. |
-| Poly | `rocq/lf/Poly.v` | `lean/lf/Poly.lean` | ready to study | Full Lean translation with matching structure and prose; chapter typechecks and student exercises remain as sorry. |
+| Poly | `rocq/lf/Poly.v` | `lean/lf/Poly.lean` | draft translated | Translation exists, but the chapter does not currently typecheck: `scripts/check_lean_chapter.sh lean/lf/Poly.lean` hits a maximum recursion depth error at `lean/lf/Poly.lean:532`. |
 | Tactics | `rocq/lf/Tactics.v` | `lean/lf/Tactics.lean` | ready to study | Full Lean translation with aligned structure and pedagogy; chapter check and review pass clean except expected student-exercise sorry warnings. |
 | Logic | `rocq/lf/Logic.v` | `lean/lf/Logic.lean` | ready to study | Full Lean translation with aligned structure and pedagogy; chapter check and review are clean except expected exercise sorry warnings. |

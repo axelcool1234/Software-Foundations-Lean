@@ -459,10 +459,11 @@ theorem repeat_plus : ∀ c1 c2 n : nat,
   intro c1 c2 n
   induction c1 with
   | zero =>
-      simp [«repeat», app]
+      change «repeat» n c2 = «repeat» n c2
+      rfl
   | succ c1 ih =>
-      rw [Nat.succ_add]
-      simp [«repeat», app, ih]
+      change n ::: («repeat» n c1 ++ «repeat» n c2) = n ::: «repeat» n (c1 + c2)
+      rw [ih]
 
 /- *** Reversing a List -/
 
@@ -526,9 +527,12 @@ theorem app_length : ∀ l1 l2 : natlist, length (l1 ++ l2) = length l1 + length
   intro l1 l2
   induction l1 with
   | nil =>
-      simp [app, length]
+      change length l2 = length l2
+      rfl
   | cons n l1' ih =>
-      rw [app, length, length, ih, Nat.succ_add]
+      rw [app, length, length, ih]
+      change S (length l1' + length l2) = S (length l1' + length l2)
+      rfl
 
 /-
 The Rocq chapter includes informal proofs here too. The same pedagogical moral

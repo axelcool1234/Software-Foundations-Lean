@@ -557,10 +557,12 @@ def minus : nat → nat → nat
 
 end NatPlayground2
 
+open NatPlayground2 (minus mult plus)
+
 def exp (base power : nat) : nat :=
   match power with
   | 0 => 1
-  | Nat.succ p => base * exp base p
+  | Nat.succ p => mult base (exp base p)
 
 /- **** Exercise: 1 star, standard (factorial) -/
 
@@ -570,8 +572,72 @@ def factorial (n : nat) : nat := by
 theorem test_factorial1 : factorial 3 = 6 := by
   sorry
 
-theorem test_factorial2 : factorial 5 = 10 * 12 := by
+theorem test_factorial2 : factorial 5 = mult 10 12 := by
   sorry
+
+/-
+Again, we can make numerical expressions easier to read and write by using the
+usual arithmetic notation for the chapter's own functions `plus`, `minus`, and
+`mult`.
+
+In Rocq this is done with notation declarations. In Lean, the closest match is
+to install chapter-local arithmetic instances for `nat`, so that later uses of
+`+`, `-`, and `*` elaborate to these definitions rather than the standard
+library ones.
+
+As in Rocq, this changes only the surface notation we write in later terms. The
+underlying functions are still the same `NatPlayground2.plus`,
+`NatPlayground2.minus`, and `NatPlayground2.mult` defined above.
+-/
+
+instance : HAdd nat nat nat where
+  hAdd := plus
+
+instance : HSub nat nat nat where
+  hSub := minus
+
+instance : HMul nat nat nat where
+  hMul := mult
+
+namespace NatPlayground2
+
+theorem plus_eq_nat_add : ∀ n m : nat, plus n m = Nat.add n m := by
+  intro n m
+  induction n with
+  | zero =>
+      rw [plus]
+      exact (Nat.zero_add m).symm
+  | succ n ih =>
+      simp [plus, ih, Nat.succ_add]
+
+theorem minus_eq_nat_sub : ∀ n m : nat, minus n m = Nat.sub n m := by
+  intro n m
+  induction n generalizing m with
+  | zero =>
+      cases m with
+      | zero =>
+          rfl
+      | succ m =>
+          rw [minus]
+          exact (Nat.zero_sub (Nat.succ m)).symm
+  | succ n ih =>
+      cases m with
+      | zero =>
+          rfl
+      | succ m =>
+          simpa [minus] using ih m
+
+theorem mult_eq_nat_mul : ∀ n m : nat, mult n m = Nat.mul n m := by
+  intro n m
+  induction n with
+  | zero =>
+      rw [mult]
+      exact (Nat.zero_mul m).symm
+  | succ n ih =>
+      rw [mult, ih, plus_eq_nat_add]
+      exact (Nat.add_comm m (Nat.mul n m)).trans (Nat.succ_mul n m).symm
+
+end NatPlayground2
 
 #check (((0 : nat) + 1) + 1 : nat)
 
@@ -630,32 +696,31 @@ the equality follows immediately.
 -/
 
 theorem plus_1_1 : 1 + 1 = 2 := by
-  simp
+  rfl
 
 theorem plus_O_n : ∀ n : nat, 0 + n = n := by
   intro n
-  simp
+  rfl
 
 theorem plus_O_n' : ∀ n : nat, 0 + n = n := by
   intro n
-  simp
+  rfl
 
 theorem plus_O_n'' : ∀ n : nat, 0 + n = n := by
   intro m
-  simp
+  rfl
 
 /-
-Lean's built-in addition is not definitionally reduced in the direction of
-`1 + n = S n`, so this is a good place to use one small arithmetic fact from
-the standard library and then finish by computation.
+With the chapter-local notation in place, these equalities now compute using
+our own definition of addition, just as they do in the Rocq source.
 -/
 theorem plus_1_l : ∀ n : nat, 1 + n = S n := by
   intro n
-  simpa using Nat.one_add n
+  rfl
 
 theorem mult_0_l : ∀ n : nat, 0 * n = 0 := by
   intro n
-  simp
+  rfl
 
 /- ################################################################# -/
 /- * Proof by Rewriting -/
@@ -685,11 +750,16 @@ theorem plus_id_exercise : ∀ n m o : nat,
 
 theorem mult_n_O : ∀ n : nat, 0 = n * 0 := by
   intro n
-  simp
+  change 0 = mult n 0
+  rw [NatPlayground2.mult_eq_nat_mul]
+  exact (Nat.mul_zero n).symm
 
 theorem mult_n_Sm : ∀ n m : nat, n * m + n = n * S m := by
   intro n m
-  rw [Nat.mul_succ]
+  change plus (mult n m) n = mult n (S m)
+  rw [NatPlayground2.plus_eq_nat_add, NatPlayground2.mult_eq_nat_mul,
+    NatPlayground2.mult_eq_nat_mul]
+  exact (Nat.mul_succ n m).symm
 
 #check mult_n_O
 #check mult_n_Sm
@@ -697,6 +767,7 @@ theorem mult_n_Sm : ∀ n m : nat, n * m + n = n * S m := by
 theorem mult_n_0_m_0 : ∀ p q : nat, (p * 0) + (q * 0) = 0 := by
   intro p q
   rw [← mult_n_O p, ← mult_n_O q]
+  rfl
 
 /- **** Exercise: 1 star, standard (mult_n_1) -/
 

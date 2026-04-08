@@ -409,7 +409,7 @@ theorem exists_example_2 : ∀ n,
   calc
     n = 4 + m := hm
     _ = (2 + 2) + m := by rfl
-    _ = 2 + (2 + m) := by rw [Nat.add_assoc]
+    _ = 2 + (2 + m) := by rw [add_assoc]
 
 /- **** Exercise: 1 star, standard, especially useful (dist_not_exists) -/
 

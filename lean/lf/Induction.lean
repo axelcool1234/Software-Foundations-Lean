@@ -171,7 +171,7 @@ with it.
 theorem mult_0_plus' : ∀ n m : nat, (n + 0 + 0) * m = n * m := by
   intro n m
   have h : n + 0 + 0 = n := by
-    simp
+    rw [add_0_r, add_0_r]
   rw [h]
 
 /-
@@ -189,7 +189,7 @@ theorem plus_rearrange : ∀ n m p q : nat,
     (n + m) + (p + q) = (m + n) + (p + q) := by
   intro n m p q
   have h : n + m = m + n := by
-    exact Nat.add_comm n m
+    exact add_comm n m
   rw [h]
 
 /- ################################################################# -/
@@ -216,9 +216,10 @@ theorem add_assoc' : ∀ n m p : nat, n + (m + p) = (n + m) + p := by
   intro n m p
   induction n with
   | zero =>
-      simp
+      rfl
   | succ n ih =>
-      rw [Nat.succ_add, Nat.succ_add, Nat.succ_add, ih]
+      change S (n + (m + p)) = S ((n + m) + p)
+      rw [ih]
 
 /-
 Lean is perfectly happy with that compact proof. For a human reader, though, it
@@ -231,9 +232,9 @@ theorem add_assoc'' : ∀ n m p : nat, n + (m + p) = (n + m) + p := by
   intro n m p
   induction n with
   | zero =>
-      simp
+      rfl
   | succ n ih =>
-      rw [Nat.succ_add, Nat.succ_add, Nat.succ_add]
+      change S (n + (m + p)) = S ((n + m) + p)
       exact congrArg Nat.succ ih
 
 /-
