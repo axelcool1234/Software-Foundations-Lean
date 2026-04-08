@@ -2,13 +2,6 @@ import Std
 
 set_option autoImplicit false
 
-abbrev nat := Nat
-
-abbrev O : nat := 0
-abbrev S : nat → nat := Nat.succ
-
-def pred : nat → nat := Nat.pred
-
 /- ################################################################# -/
 /- * Basics: Functional Programming in Lean -/
 
@@ -464,9 +457,10 @@ end TuplePlayground
 /-
 The Rocq chapter temporarily introduces its own unary natural numbers inside a
 module so they do not interfere with the standard library. We do the same with
-a namespace. Outside that namespace, the rest of the chapter returns to Lean's
-built-in `Nat`, while keeping the familiar abbreviations `O` and `S` around so
-the prose and statements remain close to the original.
+a namespace. After that playground closes, the rest of the chapter returns to
+Lean's built-in `Nat`. To keep the chapter close to the original without a
+file-wide `abbrev nat := Nat`, we introduce the familiar spellings `nat`, `O`,
+and `S` here, in the Numbers section where Rocq first discusses them.
 
 The key idea is that natural numbers are not introduced by listing all of their
 values. Instead, we give constructors for zero and successor, and that is enough
@@ -491,6 +485,19 @@ def pred (n : nat) : nat :=
   | .S n' => n'
 
 end NatPlayground
+
+/-
+After closing `NatPlayground`, this chapter goes back to Lean's standard
+natural numbers, just as the Rocq chapter goes back to the standard-library
+`nat` after `End NatPlayground`. We keep the familiar spellings `nat`, `O`, and
+`S` as notation here so later statements still read like the book, but we avoid
+using a top-level `abbrev nat := Nat`.
+-/
+notation "nat" => Nat
+notation "O" => (0 : Nat)
+notation "S" => Nat.succ
+
+def pred : nat → nat := Nat.pred
 
 #check (S (S (S (S O))))
 
@@ -644,7 +651,7 @@ the standard library and then finish by computation.
 -/
 theorem plus_1_l : ∀ n : nat, 1 + n = S n := by
   intro n
-  simpa [S] using Nat.one_add n
+  simpa using Nat.one_add n
 
 theorem mult_0_l : ∀ n : nat, 0 * n = 0 := by
   intro n
@@ -675,12 +682,6 @@ theorem plus_id_example : ∀ n m : nat,
 theorem plus_id_exercise : ∀ n m o : nat,
     n = m → m = o → n + m = m + o := by
   sorry
-
-/-
-Lean's arithmetic library contains the same facts that the Rocq chapter points
-to here, but under different names. We package them with chapter-local names
-so the later discussion can stay close to the original.
--/
 
 theorem mult_n_O : ∀ n : nat, 0 = n * 0 := by
   intro n
