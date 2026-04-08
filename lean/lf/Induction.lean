@@ -2,7 +2,7 @@ import lf.Basics
 
 set_option autoImplicit false
 
-open NatPlayground2 (minus)
+open NatPlayground2 (minus plus)
 open bin
 
 /- ################################################################# -/
@@ -109,10 +109,19 @@ the chapter.
 -/
 
 theorem mul_0_r : ∀ n : nat, n * 0 = 0 := by
-  sorry
+  intro n
+  induction n with
+  | zero => rfl
+  | succ n ih => rw [<- mult_n_O]  
 
 theorem plus_n_Sm : ∀ n m : nat, S (n + m) = n + S m := by
-  sorry
+  intro n m
+  induction n with
+  | zero => repeat rw [plus_O_n]
+  | succ n ih => 
+    /- simp only [<- plus_1_l] -/
+    /- simp only [Nat.succ_eq_add_one] -/
+
 
 theorem add_comm : ∀ n m : nat, n + m = m + n := by
   sorry
